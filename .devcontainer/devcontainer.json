@@ -1,12 +1,16 @@
 {
   "name": "Java",
-  "image": "mcr.microsoft.com/devcontainers/java:1-21",
+  "build": {
+    "dockerfile": "../Dockerfile", // Path to your Dockerfile (relative to devcontainer.json)
+    "context": ".."               // Build context (usually project root)
+  },
+  "workspaceFolder": "/workspace/${localWorkspaceFolderBasename}",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/${localWorkspaceFolderBasename},type=bind,consistency=cached",
   "features": {
     "ghcr.io/devcontainers/features/java:1": {
-      "version": "none",
+      "version": "17",
       "installMaven": "true",
-      "mavenVersion": "3.8.6",
-      "installGradle": "true"
+      "mavenVersion": "3.8.6"
     }
   }
 }
