@@ -195,4 +195,45 @@ class ChatKotlinApplicationTests(
                 }
         }
     }
+    
+    @Test
+    fun `test that latest method returns the most recent messages in correct order`() {
+        runBlocking {
+            val messages = messageRepository.findLatest().toList()
+            
+            // Verify we have the expected number of messages
+            assertThat(messages.size).isEqualTo(3)
+            
+            // Verify messages are in chronological order (oldest first)
+            assertThat(messages[0].sent).isBefore(messages[1].sent)
+            assertThat(messages[1].sent).isBefore(messages[2].sent)
+            
+            // Verify content of messages
+            assertThat(messages[0].content).isEqualTo("*testMessage*")
+            assertThat(messages[1].content).isEqualTo("**testMessage2**")
+            assertThat(messages[2].content).isEqualTo("`testMessage3`")
+        }
+    }
+    
+    @Test
+    fun `test that after method returns messages after a specific message ID`() {
+        runBlocking {
+            // Get all messages to find the ID of the first message
+            val allMessages = messageRepository.findAll().toList()
+            val firstMessageId = allMessages[0].id ?: ""
+            
+            // Get messages after the first message
+            val messagesAfterFirst = messageRepository.findLatest(firstMessageId).toList()
+            
+            // Verify we have the expected number of messages (should be 2 messages after the first one)
+            assertThat(messagesAfterFirst.size).isEqualTo(2)
+            
+            // Verify messages are in chronological order
+            assertThat(messagesAfterFirst[0].sent).isBefore(messagesAfterFirst[1].sent)
+            
+            // Verify content of messages
+            assertThat(messagesAfterFirst[0].content).isEqualTo("**testMessage2**")
+            assertThat(messagesAfterFirst[1].content).isEqualTo("`testMessage3`")
+        }
+    }
 }
