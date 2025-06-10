@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/java:1-21
+FROM mcr.microsoft.com/devcontainers/base:ubuntu
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
