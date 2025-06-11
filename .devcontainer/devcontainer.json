@@ -1,11 +1,25 @@
 {
-  "name": "Java",
+  "name": "My Custom Python App (Dockerfile)",
   "build": {
-    "dockerfile": "../Dockerfile", // Path to your Dockerfile (relative to devcontainer.json)
-    "context": ".."               // Build context (usually project root)
+    // path to your Dockerfile (relative to devcontainer.json)
+    "dockerfile": "../Dockerfile",
+    // build context (usually project root)
+    "context": ".."
   },
+  // using the Dockerfile also requires the explicit declaration of workspaceFolder.
+  // Junie always expects it to be at the default location
+  // which is "/workspace/${localWorkspaceFolderBasename}"
+  // for instance, /workspace/kotlin-spring-chat
   "workspaceFolder": "/workspace/${localWorkspaceFolderBasename}",
+
+  // declaring a "workspaceFolder" also requires declaring mount point for it
+  // see https://containers.dev/implementors/json_reference/ for details
+  // here we need to mount a folder in github actions to the devcontainer
+  // at the standard location which is "/workspace/${localWorkspaceFolderBasename}"
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/${localWorkspaceFolderBasename},type=bind,consistency=cached",
+
+  // we can still use features here, they will be applied to the container
+  // after creation
   "features": {
     "ghcr.io/devcontainers/features/java:1": {
       "version": "17",
